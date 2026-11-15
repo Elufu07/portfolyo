@@ -1,0 +1,686 @@
+:root {
+  --bg-paper: #F4F1EA;                   /* Sıcak kağıt zemini */
+  --ink-red: #B81D24;                    /* Monokrom baskı kırmızısı */
+  --grid-faint: rgba(184, 29, 36, 0.16); /* Silik arka plan ızgarası */
+  --nav-height: 68px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================================================
+   YUMUŞAK KAYDIRMA VE TEMEL SAYFA YAPISI
+   ========================================================= */
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-paper);
+}
+
+body {
+  width: 100%;
+  overflow-x: hidden;
+  background-color: var(--bg-paper);
+  color: var(--ink-red);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* =========================================================
+   ÜST MENÜ (YAPIŞKAN NAVBAR)
+   ========================================================= */
+.top-nav {
+  height: var(--nav-height);
+  width: 100%;
+  background-color: var(--bg-paper);
+  border-bottom: 1px solid var(--grid-faint);
+  padding: 0 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.brand-name {
+  text-decoration: none;
+  color: var(--ink-red);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+}
+
+.brand-sub {
+  font-weight: 400;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2.2rem;
+}
+
+.nav-links a, .drop-btn {
+  text-decoration: none;
+  color: var(--ink-red);
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.2s ease;
+}
+
+.nav-links a:hover, .drop-btn:hover {
+  opacity: 0.6;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  padding-top: 0.75rem;
+  min-width: 220px;
+  z-index: 40;
+}
+
+.dropdown-content a {
+  display: block;
+  background-color: var(--bg-paper);
+  border: 1px solid var(--ink-red);
+  border-bottom: none;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.82rem;
+}
+
+.dropdown-content a:last-child {
+  border-bottom: 1px solid var(--ink-red);
+}
+
+.dropdown-content a:hover {
+  background-color: var(--ink-red);
+  color: var(--bg-paper);
+  opacity: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.menu-toggle, .hamburger {
+  display: none;
+}
+
+/* =========================================================
+   1. EKRAN: 24x13 TAM EKRAN ÇENGEL BULMACA IZGARA ALANI
+   ========================================================= */
+.crossword-grid {
+  width: 100%;
+  height: calc(100vh - var(--nav-height));
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  grid-template-rows: repeat(13, 1fr);
+  position: relative;
+
+  background-image:
+    linear-gradient(to right, var(--grid-faint) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-faint) 1px, transparent 1px);
+  background-size: calc(100% / 24) calc(100% / 13);
+}
+
+.project-pair {
+  display: contents;
+  text-decoration: none;
+  color: inherit;
+}
+
+.word-strip {
+  display: grid;
+  z-index: 5;
+}
+
+.letter-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: clamp(0.95rem, 1.45vw, 1.55rem);
+  color: var(--ink-red);
+  text-transform: uppercase;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* =========================================================
+   NOKTALAŞMIŞ (HALFTONE / RISOGRAPH) KIRMIZI FOTOĞRAF KUTULARI
+   ========================================================= */
+.image-block {
+  border: 1px solid var(--ink-red);
+  overflow: hidden;
+  background-color: var(--ink-red);
+  position: relative;
+  z-index: 2;
+  transition: background-color 0.35s ease;
+}
+
+.img-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--bg-paper);
+  color: var(--ink-red);
+  border-right: 1px solid var(--ink-red);
+  border-bottom: 1px solid var(--ink-red);
+  padding: 2px 5px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  z-index: 4;
+}
+
+.image-block img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(100%) contrast(175%) brightness(112%);
+  mix-blend-mode: screen;
+  transition: filter 0.35s ease, transform 0.4s ease;
+}
+
+.image-block::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(244, 241, 234, 0.72) 1px, transparent 1px),
+    radial-gradient(rgba(184, 29, 36, 0.35) 1px, transparent 1px);
+  background-size: 3px 3px;
+  background-position: 0 0, 1.5px 1.5px;
+  z-index: 3;
+  transition: opacity 0.35s ease;
+}
+
+.project-pair:hover .letter-cell {
+  background-color: var(--ink-red);
+  color: var(--bg-paper);
+}
+
+.project-pair:hover .image-block {
+  background-color: transparent;
+}
+
+.project-pair:hover .image-block img {
+  filter: grayscale(0%) contrast(100%) brightness(100%);
+  mix-blend-mode: normal;
+  transform: scale(1.03);
+}
+
+.project-pair:hover .image-block::after {
+  opacity: 0;
+}
+
+/* =========================================================
+   ÇİZİMDEKİ KOORDİNAT YERLEŞİMLERİ (24x13)
+   ========================================================= */
+.img-eylemler {
+  grid-column: 2 / 5;
+  grid-row: 8 / 13;
+}
+.word-eylemler {
+  grid-column: 5 / 20;
+  grid-row: 9;
+  grid-template-columns: repeat(15, 1fr);
+}
+
+.img-parazit {
+  grid-column: 18 / 21;
+  grid-row: 10 / 13;
+}
+.word-parazit {
+  grid-column: 17;
+  grid-row: 2 / 11;
+  grid-template-rows: repeat(9, 1fr);
+}
+
+.img-denge {
+  grid-column: 20 / 24;
+  grid-row: 4 / 7;
+}
+.word-denge {
+  grid-column: 11 / 22;
+  grid-row: 3;
+  grid-template-columns: repeat(11, 1fr);
+}
+
+.img-derkenar {
+  grid-column: 4 / 8;
+  grid-row: 3 / 6;
+}
+.word-derkenar {
+  grid-column: 8;
+  grid-row: 5 / 13;
+  grid-template-rows: repeat(8, 1fr);
+}
+
+/* =========================================================
+   IZGARA SONRASI BÖLÜMLER: HAKKIMDA VE İLETİŞİM
+   ========================================================= */
+.editorial-section {
+  width: 100%;
+  border-top: 1px solid var(--ink-red);
+  padding: 5rem 2.2rem;
+  scroll-margin-top: var(--nav-height);
+}
+
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  margin-bottom: 3rem;
+}
+
+.section-index {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.4rem;
+}
+
+.section-header h2 {
+  font-size: clamp(2rem, 3.5vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+/* Hakkımda 3 Sütunlu Düzen (Sol: Fotoğraf / Orta: Metin / Sağ: Eğitim & Araçlar) */
+.about-grid {
+  display: grid;
+  grid-template-columns: 250px 1.35fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.about-photo {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border: 1px solid var(--ink-red);
+  background-color: var(--ink-red);
+  overflow: hidden;
+  position: relative;
+}
+
+.about-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(100%) contrast(135%) brightness(106%);
+  mix-blend-mode: screen;
+  transition: filter 0.35s ease, mix-blend-mode 0.35s ease;
+}
+
+/* Fotoğrafın üzerine gelindiğinde gerçek renklerine döner */
+.about-photo:hover {
+  background-color: transparent;
+}
+
+.about-photo:hover img {
+  filter: grayscale(0%) contrast(100%) brightness(100%);
+  mix-blend-mode: normal;
+}
+
+.about-bio {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+
+.about-bio .lead-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.about-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
+  border-left: 1px solid var(--grid-faint);
+  padding-left: 2.5rem;
+}
+
+.meta-group h3 {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.65rem;
+}
+
+.meta-group p {
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.tag-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag-list li {
+  border: 1px solid var(--ink-red);
+  padding: 0.3rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* İletişim Bölümü */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 4rem;
+  padding-bottom: 4rem;
+}
+
+.contact-statement p {
+  font-size: 1.1rem;
+  line-height: 1.55;
+  max-width: 460px;
+  margin-bottom: 1.5rem;
+}
+
+.mail-link {
+  display: inline-block;
+  font-size: clamp(1.2rem, 2.2vw, 1.95rem);
+  font-weight: 800;
+  color: var(--ink-red);
+  text-decoration: none;
+  border-bottom: 2px solid var(--ink-red);
+  padding-bottom: 0.25rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.mail-link:hover {
+  background-color: var(--ink-red);
+  color: var(--bg-paper);
+}
+
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  border-left: 1px solid var(--grid-faint);
+  padding-left: 2.5rem;
+}
+
+.social-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.social-row a {
+  color: var(--ink-red);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.social-row a:hover {
+  text-decoration: underline;
+}
+
+/* Alt Bilgi ve Yukarı Dönüş Çubuğu */
+.bottom-bar {
+  border-top: 1px solid var(--grid-faint);
+  padding-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.back-to-top {
+  color: var(--ink-red);
+  text-decoration: none;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--ink-red);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.back-to-top:hover {
+  background-color: var(--ink-red);
+  color: var(--bg-paper);
+}
+
+/* =========================================================
+   PROJE DETAY SAYFASI DÜZENİ (FOTOĞRAF YANINA YAZI)
+   ========================================================= */
+.project-detail-container {
+  max-width: 1360px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 3rem 2.2rem 5rem;
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.detail-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.detail-figure {
+  border: 1px solid var(--ink-red);
+  background-color: var(--bg-paper);
+}
+
+.detail-figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.detail-figure figcaption {
+  padding: 0.65rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-top: 1px solid var(--ink-red);
+  letter-spacing: 0.02em;
+}
+
+.detail-info {
+  position: sticky;
+  top: calc(var(--nav-height) + 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.detail-kicker {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.detail-title {
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  margin-top: 0.35rem;
+}
+
+.spec-list {
+  border-top: 1px solid var(--ink-red);
+  border-bottom: 1px solid var(--ink-red);
+  padding: 1rem 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem 1.5rem;
+  font-size: 0.84rem;
+}
+
+.spec-item span {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 0.15rem;
+}
+
+.detail-description {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.detail-nav-footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--grid-faint);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.detail-nav-footer a {
+  color: var(--ink-red);
+  text-decoration: none;
+}
+
+.detail-nav-footer a:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   MOBİL UYUMLULUK (768px ve altı)
+   ========================================================= */
+@media (max-width: 768px) {
+  .top-nav {
+    padding: 0 1.25rem;
+  }
+
+  .brand-sub {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 24px;
+    height: 16px;
+    cursor: pointer;
+  }
+
+  .hamburger span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background-color: var(--ink-red);
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: var(--nav-height);
+    left: 0;
+    width: 100%;
+    background-color: var(--bg-paper);
+    border-bottom: 1px solid var(--ink-red);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+
+  .menu-toggle:checked ~ .nav-links {
+    display: flex;
+  }
+
+  .crossword-grid {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    background-image: none;
+    padding: 1.25rem;
+    gap: 1.75rem;
+  }
+
+  .project-pair {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+
+  .word-strip {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .letter-cell {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--grid-faint);
+    font-size: 0.85rem;
+  }
+
+  .image-block {
+    height: 240px;
+    width: 100%;
+  }
+
+  .editorial-section {
+    padding: 3.5rem 1.25rem;
+  }
+
+  .about-grid,
+  .contact-grid,
+  .project-detail-container {
+    grid-template-columns: 1fr;
+    gap: 2.2rem;
+  }
+
+  .about-photo {
+    max-width: 240px;
+  }
+
+  .about-meta,
+  .contact-links {
+    border-left: none;
+    border-top: 1px solid var(--grid-faint);
+    padding-left: 0;
+    padding-top: 1.75rem;
+  }
+
+  .detail-info {
+    position: static;
+  }
+}
