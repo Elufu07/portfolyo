@@ -476,35 +476,65 @@ body {
 /* =========================================================
    PROJE DETAY SAYFASI DÜZENİ (FOTOĞRAF YANINA YAZI)
    ========================================================= */
+
 .project-detail-container {
   max-width: 1360px;
   width: 100%;
   margin: 0 auto;
   padding: 3rem 2.2rem 5rem;
   display: grid;
-  grid-template-columns: 1.45fr 1fr;
+  grid-template-columns: minmax(0, 1.45fr) 1fr; /* Yatay kaydırmanın taşmasını kesin olarak önler */
   gap: 4rem;
   align-items: start;
 }
 
 .detail-gallery {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Kategorileri alt alta dizer */
   gap: 2.5rem;
+  width: 100%;
+  min-width: 0;
 }
 
+/* Her kategori kutusu kendi içinde sağa doğru kaydırılır */
 .detail-figure {
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-template-rows: auto auto;
+  column-gap: 0.75rem;
+  width: fit-content;
+  max-width: 100%; /* Sütun genişliğini aştığı anda yatay kaydırmayı başlatır */
+  overflow-x: auto;
   border: 1px solid var(--ink-red);
   background-color: var(--bg-paper);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-red) transparent;
+}
+
+.detail-figure::-webkit-scrollbar {
+  height: 5px;
+}
+
+.detail-figure::-webkit-scrollbar-track {
+  background: var(--grid-faint);
+}
+
+.detail-figure::-webkit-scrollbar-thumb {
+  background: var(--ink-red);
 }
 
 .detail-figure img {
-  width: 100%;
-  height: auto;
+  grid-row: 1;
+  height: 360px;
+  width: auto;
   display: block;
+  scroll-snap-align: start;
 }
 
 .detail-figure figcaption {
+  grid-row: 2;
+  grid-column: 1 / -1;
   padding: 0.65rem 0.9rem;
   font-size: 0.78rem;
   font-weight: 600;
@@ -705,3 +735,25 @@ body {
     position: static;
   }
 }
+
+.detail-figure img {
+    height: 280px;
+  }
+
+/* Mobil menüde Projeler listesinin sola taşmasını önler ve alta doğru açar */
+  .dropdown {
+    width: 100%;
+  }
+
+  .dropdown-content {
+    position: static;
+    width: 100%;
+    min-width: unset;
+    padding-top: 0.6rem;
+    padding-left: 0.75rem;
+  }
+
+  .dropdown:hover .dropdown-content,
+  .dropdown:focus-within .dropdown-content {
+    display: block;
+  }
