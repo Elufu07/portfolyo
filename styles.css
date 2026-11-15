@@ -150,15 +150,25 @@ body {
   z-index: 5;
 }
 
+/* Başlangıçta harfler gizli, sadece boş bulmaca kutuları görünür */
 .letter-cell {
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
   font-size: clamp(0.95rem, 1.45vw, 1.55rem);
-  color: var(--ink-red);
+  color: transparent;
+  border: 1px solid rgba(184, 29, 36, 0.35);
   text-transform: uppercase;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  user-select: none;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+/* Fotoğrafın üzerine gelindiğinde arka plan zeminle aynı kalır, harfler kırmızı görünür */
+.image-block:hover + .word-strip .letter-cell {
+  background-color: var(--bg-paper);
+  color: var(--ink-red);
+  border-color: var(--ink-red);
 }
 
 /* =========================================================
@@ -209,11 +219,6 @@ body {
   background-position: 0 0, 1.5px 1.5px;
   z-index: 3;
   transition: opacity 0.35s ease;
-}
-
-.project-pair:hover .letter-cell {
-  background-color: var(--ink-red);
-  color: var(--bg-paper);
 }
 
 .project-pair:hover .image-block {
@@ -653,6 +658,25 @@ body {
 
   .menu-toggle:checked ~ .nav-links {
     display: flex;
+
+  }
+
+/* Mobil menüde Projeler listesinin sola taşmasını önler ve alta doğru açar */
+  .dropdown {
+    width: 100%;
+  }
+
+  .dropdown-content {
+    position: static;
+    width: 100%;
+    min-width: unset;
+    padding-top: 0.6rem;
+    padding-left: 0.75rem;
+  }
+
+  .dropdown:hover .dropdown-content,
+  .dropdown:focus-within .dropdown-content {
+    display: block;
   }
 
  /* MOBİL DİKEY 18x26 ÇENGEL BULMACA DÜZENİ */
@@ -664,8 +688,12 @@ body {
     background-size: calc(100% / 19) calc(100% / 26);
   }
 
+/* Mobilde dokunmatik ekran olduğu için harfler her zaman görünür kalır */
   .letter-cell {
     font-size: 0.72rem;
+    color: var(--ink-red) !important;
+    background-color: var(--bg-paper) !important;
+    border-color: rgba(184, 29, 36, 0.35);
   }
 
   /* 01. EYLEMLERİ BÜKMEK */
@@ -738,22 +766,4 @@ body {
 
 .detail-figure img {
     height: 280px;
-  }
-
-/* Mobil menüde Projeler listesinin sola taşmasını önler ve alta doğru açar */
-  .dropdown {
-    width: 100%;
-  }
-
-  .dropdown-content {
-    position: static;
-    width: 100%;
-    min-width: unset;
-    padding-top: 0.6rem;
-    padding-left: 0.75rem;
-  }
-
-  .dropdown:hover .dropdown-content,
-  .dropdown:focus-within .dropdown-content {
-    display: block;
   }
